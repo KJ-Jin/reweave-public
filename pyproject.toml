@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reweave"
+version = "0.1.0"
+description = "Learning-guided exact optimization that grows a certified library of reusable abstractions from its own search experience."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "KJ Jin" }]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "torch>=2.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[tool.setuptools]
+# `polycompress` is the vendored exact runtime (see legacy_runtime/README.md). ReWeave imports it only through
+# `reweave/v1.py`, which checks the pinned `.v1_commit` marker next to it, so use an editable install (`pip install -e .`).
+packages = ["reweave", "reweave.canon", "polycompress", "polycompress.experiments"]
+package-dir = { "polycompress" = "legacy_runtime/polycompress", "polycompress.experiments" = "legacy_runtime/polycompress/experiments" }
+
+[tool.setuptools.package-data]
+reweave = ["data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-p no:cacheprovider"
